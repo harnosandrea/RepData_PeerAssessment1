@@ -8,37 +8,43 @@ output:
 
 ## Loading and preprocessing the data
 
-```{r}
-mydata <- read.csv("activity.csv")
 
+```r
+mydata <- read.csv("activity.csv")
 ```
 
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 steps_per_day <- tapply(mydata$steps, mydata$date, sum,na.rm = T, simplify = T)
 hist(steps_per_day)
 ```
 
-The mean number of steps taken per day is `r round(mean(steps_per_day, na.rm = T),1)` and the median number of steps taken ped day is `r median(steps_per_day, na.rm = T)`.
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+The mean number of steps taken per day is 9354.2 and the median number of steps taken ped day is 10395.
 
 
 
 ## What is the average daily activity pattern?
 
-```{r}
-plot(steps_per_day, type="l")
 
+```r
+plot(steps_per_day, type="l")
 ```
 
-The `r mydata$interval[which.max(mydata$steps)]` th interval on day `r mydata$date[which.max(mydata$steps)]` contains the maximum number of steps (`r max(mydata$steps, na.rm=T)`).
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+The 615 th interval on day 2012-11-27 contains the maximum number of steps (806).
 
 ## Imputing missing values
 
-The number of rows with missing values is `r sum(!complete.cases(mydata))`.
+The number of rows with missing values is 2304.
 
-```{r}
+
+```r
 mydata_imputed <- mydata
 for (i in mydata$date)
 {
@@ -48,12 +54,15 @@ for (i in mydata$date)
 }
 ```
 
-```{r}
+
+```r
 imputed_steps_per_day <- tapply(mydata_imputed$steps, mydata_imputed$date, sum,na.rm = T)
 hist(imputed_steps_per_day)
 ```
 
-The mean number of steps taken per day is `r round(mean(imputed_steps_per_day, na.rm = T),1)` and the median number of steps taken ped day is `r round(median(imputed_steps_per_day, na.rm = T),1)`.
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+The mean number of steps taken per day is 9354.2 and the median number of steps taken ped day is 1.0395\times 10^{4}.
 
 The mean is the same (should be) as without imputing, the median is almost the same.
 The total number of steps per day should increase as the impact of imputation.
@@ -61,7 +70,8 @@ The total number of steps per day should increase as the impact of imputation.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 mydata_imputed$date <- as.Date(mydata_imputed$date)
 mydata_imputed$weekdays <- as.factor(ifelse(weekdays(mydata_imputed$date) == "Saturday" | weekdays(mydata_imputed$date) == "Sunday", "weekend", "weekday"))
 steps_per_day_weekday <- tapply(mydata_imputed$steps, list(mydata_imputed$weekdays, mydata_imputed$date), mean,na.rm = T)
@@ -69,7 +79,11 @@ steps_per_day_weekday <- tapply(mydata_imputed$steps, list(mydata_imputed$weekda
 par(mfrow=c(2,1))
 plot(na.omit(steps_per_day_weekday[1,]), type = "l", ylab="Nb. of steps", main="Weekday")
 plot(na.omit(steps_per_day_weekday[2,]), type = "l", ylab="Nb. of steps", main="Weekend")
-par(mfrow=c(1,1))
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+```r
+par(mfrow=c(1,1))
 ```
 
