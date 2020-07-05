@@ -32,16 +32,20 @@ The mean number of steps taken per day is 9354.2 and the median number of steps 
 
 
 ```r
-plot(steps_per_day, type="l")
+daily_activity <- tapply(mydata$steps, mydata$interval, sum,na.rm = T, simplify = T)
+
+plot(daily_activity, type="l")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-The 615 th interval on day 2012-11-27 contains the maximum number of steps (806).
+The 104 th interval contains on average the maximum number of steps (10927).
 
 ## Imputing missing values
 
 The number of rows with missing values is 2304.
+
+Imputing missing values using the daily avearge.
 
 
 ```r
@@ -74,11 +78,11 @@ The total number of steps per day should increase as the impact of imputation.
 ```r
 mydata_imputed$date <- as.Date(mydata_imputed$date)
 mydata_imputed$weekdays <- as.factor(ifelse(weekdays(mydata_imputed$date) == "Saturday" | weekdays(mydata_imputed$date) == "Sunday", "weekend", "weekday"))
-steps_per_day_weekday <- tapply(mydata_imputed$steps, list(mydata_imputed$weekdays, mydata_imputed$date), mean,na.rm = T)
+steps_weekday <- tapply(mydata_imputed$steps, list(mydata_imputed$weekdays, mydata_imputed$interval), mean,na.rm = T)
 
 par(mfrow=c(2,1))
-plot(na.omit(steps_per_day_weekday[1,]), type = "l", ylab="Nb. of steps", main="Weekday")
-plot(na.omit(steps_per_day_weekday[2,]), type = "l", ylab="Nb. of steps", main="Weekend")
+plot(na.omit(steps_weekday[1,]), type = "l", ylab="Nb. of steps", main="Weekday")
+plot(na.omit(steps_weekday[2,]), type = "l", ylab="Nb. of steps", main="Weekend")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
